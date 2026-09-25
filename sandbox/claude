@@ -1,0 +1,138 @@
+#!/bin/bash
+# `claude` in a container, for the AutoRef proposer.
+#
+# claude_wrapper.py finds the CLI with shutil.which("claude"); the search loop puts this directory
+# first on PATH, so the whole invocation -- flags, prompt, streamed JSON on stdout -- goes through
+# unchanged into a filesystem that holds only what the proposer is meant to see. Everything is
+# mounted at its host path, so the virtualenv and absolute paths keep working; what is not mounted
+# does not exist inside.
+#
+# Environment:
+#   AUTOREF_SEARCH_RUN     the run under outputs/search/ (set by the search loop)
+#   AUTOREF_SANDBOX_IMAGE  the image to run (default autoref-proposer:latest; build it with
+#                          `docker build -t autoref-proposer:latest sandbox/`)
+#   AUTOREF_SANDBOX_GPUS   docker GPU flags (default "--gpus all"; e.g. "--gpus device=0,1" or CDI
+#                          "--device nvidia.com/gpu=0 --device nvidia.com/gpu=1")
+#   AUTOREF_PROPOSER_AUTH  "subscription" (default: ~/.claude/.credentials.json) or "api_key"
+#                          (ANTHROPIC_API_KEY is passed in)
+#   AUTOREF_PRINT_MOUNTS=1 print the read-only source files and exit (sandbox/inspect_contents.py)
+set -euo pipefail
+
+HERE=$(cd "$(dirname "$(readlink -f "$0")")" && pwd -P)
+REPO=${AUTOREF_REPO:-$(cd "$HERE/.." && pwd -P)}
+OUTPUTS=$(readlink -m "${AUTOREF_OUTPUTS:-$REPO/outputs}")
+EXTERNAL=$(readlink -m "${AUTOREF_EXTERNAL:-$REPO/external}")
+RUN=${AUTOREF_SEARCH_RUN:?AUTOREF_SEARCH_RUN is not set; the search loop sets it}
+RUN_DIR=$OUTPUTS/search/$RUN
+IMAGE=${AUTOREF_SANDBOX_IMAGE:-autoref-proposer:latest}
+GPU_FLAGS=${AUTOREF_SANDBOX_GPUS:---gpus all}
+
+# The package files a candidate imports and a prototype run executes, named one by one: the rest of
+# the repository (the released harnesses, results, documentation, the search loop) is not mounted.
+SOURCES="autoref/__init__.py autoref/paths.py autoref/models.py autoref/harness.py
+         autoref/generators.py autoref/multibanana.py autoref/judge.py
+         .claude/skills/autoref-proposer"
+if [ "${AUTOREF_PRINT_MOUNTS:-}" = 1 ]; then
+    for p in $SOURCES; do echo "$REPO/$p"; done
+    echo "$EXTERNAL/GEMS/agent/skills"
+    exit 0
+fi
+
+# AUTOREF_SHELL=1 runs `bash -lc "$*"` in the same container instead of the CLI (verify_isolation.sh)
+SHELL_MODE=${AUTOREF_SHELL:-}
+
+# the real CLI: the first `claude` on PATH that is not this script; it must be the native binary
+CLI=""
+IFS=: read -ra DIRS <<< "$PATH"
+for d in "${DIRS[@]}"; do
+    [ -x "$d/claude" ] || continue
+    [ "$(readlink -f "$d/claude")" = "$(readlink -f "$0")" ] && continue
+    CLI=$(readlink -f "$d/claude"); break
+done
+if [ -z "$SHELL_MODE" ]; then
+    [ -n "$CLI" ] || { echo "sandbox/claude: no claude CLI on PATH" >&2; exit 2; }
+    head -c 4 "$CLI" | grep -q "ELF" || {
+        echo "sandbox/claude: $CLI is not the native Claude Code binary (use the native installer)" >&2
+        exit 2; }
+fi
+
+ro () { printf ' -v %s:%s:ro' "$1" "${2:-$1}"; }
+rw () { printf ' -v %s:%s' "$1" "${2:-$1}"; }
+
+MOUNTS=""
+[ -n "$CLI" ] && MOUNTS+=$(ro "$CLI")
+for p in $SOURCES .env autoref/search/.empty_plugins; do
+    [ -e "$REPO/$p" ] && MOUNTS+=$(ro "$REPO/$p")
+done
+# a missing bind-mount source would be created by Docker as a root-owned directory: refuse instead
+need () { [ -e "$1" ] || { echo "sandbox/claude: $1 is missing ($2)" >&2; exit 2; }; }
+need "$REPO/.venv" "create the virtualenv, see README"
+need "$EXTERNAL/multibanana/judge.py" "run scripts/setup_data.sh"
+need "$EXTERNAL/GEMS/agent/GEMS.py" "run scripts/setup_data.sh"
+need "$RUN_DIR/proposer_view" "create the run: python -m autoref.search --run-name $RUN --init-only"
+
+# the virtualenv, and its base interpreter when that lives outside /usr (uv, pyenv, conda)
+MOUNTS+=$(ro "$REPO/.venv")
+BASE=$(sed -n 's/^home *= *//p' "$REPO/.venv/pyvenv.cfg" 2>/dev/null || true)
+if [ -n "$BASE" ] && [[ "$BASE" != /usr/* ]]; then
+    MOUNTS+=$(ro "$(dirname "$BASE")")
+fi
+# the benchmark's judge prompt and the GEMS prompts and skills the seed harness reads
+MOUNTS+=$(ro "$EXTERNAL/multibanana")
+MOUNTS+=$(ro "$EXTERNAL/GEMS/agent/GEMS.py")
+MOUNTS+=$(ro "$EXTERNAL/GEMS/agent/skills")
+# D_train only: a view of the dataset and of the split files holding just the training split, at
+# the paths the code expects, so the validation and test items are not in the container at all
+MOUNTS+=$(ro "$RUN_DIR/proposer_view/MultiBanana" "$EXTERNAL/MultiBanana")
+MOUNTS+=$(ro "$RUN_DIR/proposer_view/splits" "$REPO/data/splits")
+# where the proposer writes: its candidates, this run's logs, and its own model-call cache
+MOUNTS+=$(rw "$RUN_DIR/harnesses")
+MOUNTS+=$(rw "$RUN_DIR/logs")
+mkdir -p "$RUN_DIR/proposer_cache"
+MOUNTS+=$(rw "$RUN_DIR/proposer_cache")
+[ -d "$HOME/.cache/huggingface" ] && MOUNTS+=$(rw "$HOME/.cache/huggingface")
+
+# The CLI's home is a throwaway directory holding only the credentials, so nothing it wrote in
+# earlier sessions is there to read and nothing it writes now outlives the container.
+MOUNTS+=" --tmpfs $HOME/.claude:rw,mode=1777"
+AUTH_ENV=""
+if [ "${AUTOREF_PROPOSER_AUTH:-subscription}" = api_key ]; then
+    AUTH_ENV="-e ANTHROPIC_API_KEY"
+else
+    # writable: the CLI rotates its OAuth token during a long session
+    [ -f "$HOME/.claude/.credentials.json" ] && MOUNTS+=$(rw "$HOME/.claude/.credentials.json")
+fi
+if [ -f "$HOME/.claude.json" ]; then
+    CJ=$(mktemp /tmp/autoref_claude_json.XXXXXX)
+    python3 - "$HOME/.claude.json" "$CJ" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+d["projects"] = {k: {"hasTrustDialogAccepted": True} for k in d.get("projects", {})}
+json.dump(d, open(sys.argv[2], "w"))
+PY
+    MOUNTS+=" -v $CJ:$HOME/.claude.json:ro"
+fi
+
+if [ -n "$SHELL_MODE" ]; then ENTRY=(/bin/bash -lc); else ENTRY=("$CLI"); fi
+# shellcheck disable=SC2086
+exec docker run --rm -i \
+    --user "$(id -u):$(id -g)" \
+    --workdir "$REPO" \
+    -e HOME="$HOME" \
+    -e PATH="/usr/local/bin:/usr/bin:/bin" \
+    -e PYTHONDONTWRITEBYTECODE=1 \
+    -e AUTOREF_CACHE="$RUN_DIR/proposer_cache" \
+    -e AUTOREF_OUTPUTS="$OUTPUTS" \
+    -e AUTOREF_EXTERNAL="$EXTERNAL" \
+    -e XDG_CACHE_HOME=/tmp/cache \
+    -e HF_HOME="$HOME/.cache/huggingface" \
+    -e MPLCONFIGDIR=/tmp/mpl \
+    -e TRITON_CACHE_DIR=/tmp/triton \
+    -e TORCHINDUCTOR_CACHE_DIR=/tmp/inductor \
+    -e TERM=dumb \
+    $AUTH_ENV \
+    --tmpfs /tmp:exec,mode=1777,size=4g \
+    $GPU_FLAGS \
+    $MOUNTS \
+    "$IMAGE" \
+    "${ENTRY[@]}" "$@"
