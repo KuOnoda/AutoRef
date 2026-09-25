@@ -1,0 +1,19 @@
+# runs, logs, the model-call cache
+outputs/
+# benchmarks and third-party checkouts fetched by scripts/setup_data.sh
+external/
+# secrets
+.env
+# environments
+.venv
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+# what `python -m autoref.generate` writes next to its output
+*.trace.json
+*_rounds/
+# the Claude Code wrapper creates this empty directory on first use
+autoref/search/.empty_plugins/
+.DS_Store
