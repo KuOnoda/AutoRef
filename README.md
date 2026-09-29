@@ -28,6 +28,8 @@
 
 ## 🌏 Overview
 
+https://github.com/user-attachments/assets/fb2b2860-5c58-4dc3-a688-159fd0e1aae8
+
 ![Qualitative comparison on held-out MultiBanana tasks](assets/qualitative.jpg)
 
 ![Results](assets/results.png)
