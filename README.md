@@ -2,8 +2,12 @@
 
 # AutoRef: Harness Optimization for Agentic Multi-Reference Image Generation
 
-[![Paper](https://img.shields.io/badge/Paper-coming%20soon-b31b1b)](#citation)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+ <a href="https://arxiv.org/abs/2609.35530">
+   <img alt="arXiv paper 2609.35530" src="https://img.shields.io/badge/arXiv-2609.35530-b31b1b.svg">
+ </a>
+ <a href="https://opensource.org/licenses/MIT">
+  <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg">
+</a>
 
 </div>
 
@@ -123,10 +127,14 @@ prompt and waits for `pending_eval.json`; only Claude Code was used in the paper
 ## Citation
 
 ```bibtex
-@article{autoref2026,
-  title   = {AutoRef: Harness Optimization for Agentic Multi-Reference Image Generation},
-  author  = {Anonymous},
-  year    = {2026}
+@misc{oshima2026autoref,
+      title={AutoRef: Harness Optimization for Agentic Multi-Reference Image Generation}, 
+      author={Yuta Oshima and Ku Onoda and Yusuke Iwasawa and Masahiro Suzuki and Yutaka Matsuo and Hiroki Furuta},
+      year={2026},
+      eprint={2609.35530},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2609.35530}, 
 }
 ```
 
