@@ -106,7 +106,7 @@ FLUX.2 [klein] 9B is gated on Hugging Face: accept its license and set `HF_TOKEN
 Qwen-Image-Edit-2511 needs about 58 GB: on a 48 GB card set `AUTOREF_CPU_OFFLOAD=1`, or spread it over
 three cards with `AUTOREF_SHARD_GPUS=3`.
 
-## 🤖 AutoRef
+## 🤖AutoRef
 
 ![AutoRef](assets/overview.png)
 
@@ -117,7 +117,7 @@ candidates, and the best B = 2 become the beam the next iteration builds on; the
 which candidates survived. Starting from the generator alone and GEMS, five iterations produced
 AutoRef-Harness.
 
-### 🔍 Run the search
+### 🔍Run the search
 
 In addition to the setup above: the Claude Code CLI (native installer) logged in to a Claude
 subscription, Docker with GPU support, and `OPENAI_API_KEY` in a `.env` file at the repository root
