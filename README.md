@@ -17,7 +17,7 @@
 <details open><summary>💡 We also have other multi-reference image generation projects that may interest you ✨</summary><p>
 
 > [**MultiBanana: A Challenging Benchmark for Multi-Reference Text-to-Image Generation**](https://arxiv.org/abs/2511.22989) <br>
-> **🍌 CVPR 2026 (Main) 🍌** <br>
+> **CVPR 2026 (Main)** <br>
 > Yuta Oshima, Daiki Miyake, Kohsei Matsutani, Yusuke Iwasawa, Masahiro Suzuki, Yutaka Matsuo, Hiroki Furuta <br>
 > [![CVPR 2026](https://img.shields.io/badge/CVPR-2026-blue)](https://cvpr.thecvf.com/)
 > [![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/matsuolab/multibanana)
