@@ -77,7 +77,7 @@ pip install -e .
 export OPENAI_API_KEY=...          # GPT-5.5, the reasoning model
 ```
 
-### 🚀　Quick start
+### 🚀 Quick start
 
 ```bash
 python -m autoref.generate --refs dog.png hat.png beach.png \
@@ -88,7 +88,7 @@ python -m autoref.generate --refs dog.png hat.png beach.png \
 `--generator` selects `flux-klein-4b` (default), `flux-klein-9b` or `qwen-image-edit-2511`. The three
 drafts are kept in `out_rounds/`.
 
-### 📊　Evaluate on MultiBanana
+### 📊 Evaluate on MultiBanana
 
 ```bash
 bash scripts/setup_data.sh                                       # MultiBanana, the judge's prompt and GEMS -> external/
