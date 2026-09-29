@@ -139,7 +139,19 @@ prompt and waits for `pending_eval.json`; only Claude Code was used in the paper
       primaryClass={cs.CV},
       url={https://arxiv.org/abs/2609.35530}, 
 }
+```
 
+<details open><summary>💡 We also have other multi-reference image generation projects that may interest you ✨</summary><p>
+
+> [**MultiBanana: A Challenging Benchmark for Multi-Reference Text-to-Image Generation**](https://arxiv.org/abs/2511.22989) <br>
+> **CVPR 2026 (Main)** <br>
+> Yuta Oshima, Daiki Miyake, Kohsei Matsutani, Yusuke Iwasawa, Masahiro Suzuki, Yutaka Matsuo, Hiroki Furuta <br>
+> [![CVPR 2026](https://img.shields.io/badge/CVPR-2026-blue)](https://cvpr.thecvf.com/)
+> [![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/matsuolab/multibanana)
+> [![github](https://img.shields.io/github/stars/matsuolab/multibanana.svg?style=social)](https://github.com/matsuolab/multibanana)
+> [![arXiv](https://img.shields.io/badge/Arxiv-2511.22989-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2511.22989) <br>
+
+```bibtex
 @inproceedings{oshima2026multibanana,
     author    = {Oshima, Yuta and Miyake, Daiki and Matsutani, Kohsei and Iwasawa, Yusuke and Suzuki, Masahiro and Matsuo, Yutaka and Furuta, Hiroki},
     title     = {MultiBanana: A Challenging Benchmark for Multi-Reference Text-to-Image Generation},
@@ -149,6 +161,7 @@ prompt and waits for `pending_eval.json`; only Claude Code was used in the paper
     pages     = {448-460}
 }
 ```
+</details>
 
 ## 🙏 Acknowledgements
 
