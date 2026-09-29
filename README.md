@@ -28,7 +28,11 @@
 
 ## 🌏 Overview
 
-https://github.com/user-attachments/assets/fb2b2860-5c58-4dc3-a688-159fd0e1aae8
+
+
+https://github.com/user-attachments/assets/df4143fc-c7eb-41b5-bc96-de6daaceddb4
+
+
 
 ![Qualitative comparison on held-out MultiBanana tasks](assets/qualitative.jpg)
 
