@@ -2,6 +2,9 @@
 
 # AutoRef: Harness Optimization for Agentic Multi-Reference Image Generation
 
+<b>Yuta Oshima*, Ku Onoda*, Yusuke Iwasawa, Masahiro Suzuki, Yutaka Matsuo, Hiroki Furuta</b><br>
+(*equal contribution)
+
  <a href="https://arxiv.org/abs/2609.35530">
    <img alt="arXiv paper 2609.35530" src="https://img.shields.io/badge/arXiv-2609.35530-b31b1b.svg">
  </a>
@@ -11,7 +14,19 @@
 
 </div>
 
-## Overview
+<details open><summary>💡 We also have other multi-reference image generation projects that may interest you ✨</summary><p>
+
+> [**MultiBanana: A Challenging Benchmark for Multi-Reference Text-to-Image Generation**](https://arxiv.org/abs/2511.22989) <br>
+> **🍌 CVPR 2026 (Main) 🍌** <br>
+> Yuta Oshima, Daiki Miyake, Kohsei Matsutani, Yusuke Iwasawa, Masahiro Suzuki, Yutaka Matsuo, Hiroki Furuta <br>
+> [![CVPR 2026](https://img.shields.io/badge/CVPR-2026-blue)](https://cvpr.thecvf.com/)
+> [![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/matsuolab/multibanana)
+> [![github](https://img.shields.io/github/stars/matsuolab/multibanana.svg?style=social)](https://github.com/matsuolab/multibanana)
+> [![arXiv](https://img.shields.io/badge/Arxiv-2511.22989-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2511.22989) <br>
+
+</p></details>
+
+## 🌏 Overview
 
 ![Qualitative comparison on held-out MultiBanana tasks](assets/qualitative.jpg)
 
@@ -33,7 +48,7 @@ on held-out MultiBanana tasks, above Nano Banana Pro (7.20) and GPT-Image-1.5 (7
 unchanged to unseen reference counts and to other generators, FLUX.2 [klein] 9B and
 Qwen-Image-Edit-2511.
 
-## AutoRef-Harness
+## 🧩 AutoRef-Harness
 
 AutoRef-Harness ([`harnesses/autoref_harness.py`](harnesses/autoref_harness.py)) draws three images
 per task, with a reasoning model (GPT-5.5) around the generator:
@@ -51,7 +66,7 @@ per task, with a reasoning model (GPT-5.5) around the generator:
    it concerns, are folded into a revised prompt for draft C, which must beat the winner by the same
    rule.
 
-### Setup
+### 🛠️ Setup
 
 Python 3.10+ and a CUDA GPU with 48 GB.
 
@@ -62,7 +77,7 @@ pip install -e .
 export OPENAI_API_KEY=...          # GPT-5.5, the reasoning model
 ```
 
-### Quick start
+### 🚀　Quick start
 
 ```bash
 python -m autoref.generate --refs dog.png hat.png beach.png \
@@ -73,7 +88,7 @@ python -m autoref.generate --refs dog.png hat.png beach.png \
 `--generator` selects `flux-klein-4b` (default), `flux-klein-9b` or `qwen-image-edit-2511`. The three
 drafts are kept in `out_rounds/`.
 
-### Evaluate on MultiBanana
+### 📊　Evaluate on MultiBanana
 
 ```bash
 bash scripts/setup_data.sh                                       # MultiBanana, the judge's prompt and GEMS -> external/
@@ -91,7 +106,7 @@ FLUX.2 [klein] 9B is gated on Hugging Face: accept its license and set `HF_TOKEN
 Qwen-Image-Edit-2511 needs about 58 GB: on a 48 GB card set `AUTOREF_CPU_OFFLOAD=1`, or spread it over
 three cards with `AUTOREF_SHARD_GPUS=3`.
 
-## AutoRef
+## 🤖 AutoRef
 
 ![AutoRef](assets/overview.png)
 
@@ -102,7 +117,7 @@ candidates, and the best B = 2 become the beam the next iteration builds on; the
 which candidates survived. Starting from the generator alone and GEMS, five iterations produced
 AutoRef-Harness.
 
-### Run the search
+### 🔍 Run the search
 
 In addition to the setup above: the Claude Code CLI (native installer) logged in to a Claude
 subscription, Docker with GPU support, and `OPENAI_API_KEY` in a `.env` file at the repository root
@@ -124,7 +139,7 @@ an hour.
 Other coding agents can act as the proposer with `--proposer manual`, which prints each iteration's
 prompt and waits for `pending_eval.json`; only Claude Code was used in the paper.
 
-## Citation
+## ⭐️ Citation
 
 ```bibtex
 @misc{oshima2026autoref,
@@ -136,9 +151,18 @@ prompt and waits for `pending_eval.json`; only Claude Code was used in the paper
       primaryClass={cs.CV},
       url={https://arxiv.org/abs/2609.35530}, 
 }
+
+@inproceedings{oshima2026multibanana,
+    author    = {Oshima, Yuta and Miyake, Daiki and Matsutani, Kohsei and Iwasawa, Yusuke and Suzuki, Masahiro and Matsuo, Yutaka and Furuta, Hiroki},
+    title     = {MultiBanana: A Challenging Benchmark for Multi-Reference Text-to-Image Generation},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2026},
+    pages     = {448-460}
+}
 ```
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 The search loop, the agent's instructions and [`autoref/search/claude_wrapper.py`](autoref/search/claude_wrapper.py)
 are adapted from [Meta-Harness](https://github.com/stanford-iris-lab/meta-harness). The search starts
