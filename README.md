@@ -29,14 +29,10 @@
 ## 🌏 Overview
 
 
-
 https://github.com/user-attachments/assets/df4143fc-c7eb-41b5-bc96-de6daaceddb4
 
 
-
-![Qualitative comparison on held-out MultiBanana tasks](assets/qualitative.jpg)
-
-![Results](assets/results.png)
+![Results](assets/results_overview.png)
 
 **Multi-reference image generation** composes several reference images (people, objects,
 backgrounds, styles) into one image that follows an instruction, such as *"the patterned bowl from
