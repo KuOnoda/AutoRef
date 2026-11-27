@@ -14,11 +14,9 @@
 
 </div>
 
-https://github.com/user-attachments/assets/df4143fc-c7eb-41b5-bc96-de6daaceddb4
+https://github.com/user-attachments/assets/63273704-adeb-4c60-894d-7b5fd8c6371c
 
 ## 🌏 Overview
-
-![Results](assets/results_overview.jpg)
 
 **Multi-reference image generation** composes several reference images (people, objects,
 backgrounds, styles) into one image that follows an instruction, such as *"the patterned bowl from
