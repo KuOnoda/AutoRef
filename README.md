@@ -5,12 +5,20 @@
 <b>Yuta Oshima*, Ku Onoda*, Yusuke Iwasawa, Masahiro Suzuki, Yutaka Matsuo, Hiroki Furuta</b><br>
 (*equal contribution)
 
- <a href="https://arxiv.org/abs/2609.35530">
-   <img alt="arXiv paper 2609.35530" src="https://img.shields.io/badge/arXiv-2609.35530-b31b1b.svg">
- </a>
- <a href="https://opensource.org/licenses/MIT">
-  <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg">
-</a>
+<p>
+  <a href="https://arxiv.org/abs/2609.35530">
+    <img alt="arXiv paper 2609.35530" src="https://img.shields.io/badge/arXiv-2609.35530-b31b1b.svg">
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg">
+  </a>
+  <a href="https://paperswithcode.co/api/v1/papers/2609.35530/leaderboard-badge-link?eval=44862">
+    <img alt="Papers with Code: SOTA on MultiBanana" src="https://paperswithcode.co/api/v1/papers/2609.35530/leaderboard-badge.svg?eval=44862&live=1">
+  </a>
+  <a href="https://paperswithcode.co/api/v1/papers/2609.35530/leaderboard-badge-link?eval=44863">
+    <img alt="Papers with Code: SOTA on OmniContext" src="https://paperswithcode.co/api/v1/papers/2609.35530/leaderboard-badge.svg?eval=44863&live=1">
+  </a>
+</p>
 
 </div>
 
