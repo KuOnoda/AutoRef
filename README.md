@@ -28,7 +28,7 @@ https://github.com/user-attachments/assets/a8f48ca1-16ff-4375-b833-854b3b91e774
 
 **AutoRef** is the first **harness optimization** method for image generation. Keeping both the image generator and the reasoning model frozen without any training, a coding agent automatically rewrites and optimizes the surrounding program (the harness) that orchestrates them. Because VLM evaluation scores for image generation are inherently noisy, AutoRef combines **Task Separation**—splitting tasks for agent feedback and candidate selection—with **Beam Search**, which retains multiple top candidates at each iteration to prevent promising harnesses from being discarded and ensure robust search.
 
-The resulting **AutoRef-Harness** substantially boosts `FLUX.2 [klein] 4B` on the MultiBanana benchmark, outperforming proprietary models such as `Nano Banana Pro`, `GPT-Image-1.5`, and `Seedream 4.5`. Moreover, it transfers unchanged—without re-optimization—to unseen reference counts and other model sizes and families (`FLUX.2 [klein] 9B` and `Qwen-Image-Edit-2511`), delivering consistent performance gains.
+The resulting **AutoRef-Harness** substantially boosts `FLUX.2 [klein] 4B` on the MultiBanana benchmark, being competitive with or even outperforming proprietary models such as `Nano Banana Pro`, `GPT-Image-1.5`, and `Seedream 4.5`. Moreover, it transfers unchanged—without re-optimization—to unseen reference counts and other model sizes and families (`FLUX.2 [klein] 9B` and `Qwen-Image-Edit-2511`), delivering consistent performance gains.
 
 ## 🧩 AutoRef-Harness
 
