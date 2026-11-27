@@ -14,25 +14,13 @@
 
 </div>
 
-https://github.com/user-attachments/assets/63273704-adeb-4c60-894d-7b5fd8c6371c
-
 ## 🌏 Overview
 
-**Multi-reference image generation** composes several reference images (people, objects,
-backgrounds, styles) into one image that follows an instruction, such as *"the patterned bowl from
-image 1 on the left, the hawk from image 2 in the center, the truck from image 3 on the right"*.
-Image generators often drop, duplicate or misplace a reference, or paste it in without blending it
-into the scene.
+https://github.com/user-attachments/assets/63273704-adeb-4c60-894d-7b5fd8c6371c
 
-**AutoRef** improves a generator without training it. It optimizes the **harness**: the program
-around a frozen image generator and a frozen reasoning model that decides what to ask, what to draw
-and which image to return. A coding agent writes harnesses as code, and a beam search keeps the
-ones that hold up on tasks the agent never sees.
+**AutoRef** is the first **harness optimization** method for image generation. Keeping both the image generator and the reasoning model frozen without any training, a coding agent automatically rewrites and optimizes the surrounding program (the harness) that orchestrates them. Because VLM evaluation scores for image generation are inherently noisy, AutoRef combines **Task Separation**—splitting tasks for agent feedback and candidate selection—with **Beam Search**, which retains multiple top candidates at each iteration to prevent promising harnesses from being discarded and ensure robust search.
 
-The harness AutoRef discovered, **AutoRef-Harness**, raises FLUX.2 [klein] 4B from 5.72 to **7.37**
-on held-out MultiBanana tasks, above Nano Banana Pro (7.20) and GPT-Image-1.5 (7.07). It transfers
-unchanged to unseen reference counts and to other generators, FLUX.2 [klein] 9B and
-Qwen-Image-Edit-2511.
+The resulting **AutoRef-Harness** substantially boosts `FLUX.2 [klein] 4B` on the MultiBanana benchmark, outperforming proprietary models such as `Nano Banana Pro`, `GPT-Image-1.5`, and `Seedream 4.5`. Moreover, it transfers unchanged—without re-optimization—to unseen reference counts as well as other model sizes and families (`FLUX.2 [klein] 9B` and `Qwen-Image-Edit-2511`), delivering consistent performance gains.
 
 ## 🧩 AutoRef-Harness
 
